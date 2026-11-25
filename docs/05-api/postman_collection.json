@@ -1,0 +1,153 @@
+{
+  "info": {
+    "name": "LMS Application REST API Collection",
+    "description": "Complete Postman collection for testing the Learning Management System REST API endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Admin Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@lms.com\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Instructor Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"dr.patel@lms.com\",\n  \"password\": \"Instructor@123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Student Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"student1@lms.com\",\n  \"password\": \"Student@123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Get Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Courses & Modules",
+      "item": [
+        {
+          "name": "List Courses",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/courses", "host": ["{{baseUrl}}"], "path": ["courses"] }
+          }
+        },
+        {
+          "name": "Get Course Details",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/courses/1", "host": ["{{baseUrl}}"], "path": ["courses", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Batches & Rosters",
+      "item": [
+        {
+          "name": "List Batches",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/batches", "host": ["{{baseUrl}}"], "path": ["batches"] }
+          }
+        },
+        {
+          "name": "Get Batch Roster",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/batches/1", "host": ["{{baseUrl}}"], "path": ["batches", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Quizzes",
+      "item": [
+        {
+          "name": "List Quizzes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/quizzes", "host": ["{{baseUrl}}"], "path": ["quizzes"] }
+          }
+        },
+        {
+          "name": "Start Quiz Attempt",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/quizzes/1/start", "host": ["{{baseUrl}}"], "path": ["quizzes", "1", "start"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports & Health",
+      "item": [
+        {
+          "name": "Dashboard Reports",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/reports/dashboard", "host": ["{{baseUrl}}"], "path": ["reports", "dashboard"] }
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] }
+          }
+        }
+      ]
+    }
+  ]
+}
