@@ -1,10 +1,13 @@
 import os
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from app.config import settings
+from app.database import Base, engine
+import app.models
 
 # Import all routers
 from app.routers import (
@@ -15,13 +18,23 @@ from app.routers import (
     reports, health, files
 )
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Ensure database tables exist automatically on startup
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        print(f"Warning during database auto-init: {e}")
+    yield
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
     description="Enterprise Full Stack Learning Management System (LMS) REST API with Role-Based Access Control.",
     docs_url="/docs",
     redoc_url="/redoc",
-    openapi_url="/openapi.json"
+    openapi_url="/openapi.json",
+    lifespan=lifespan
 )
 
 # CORS configuration

@@ -13,10 +13,10 @@ A centralized, database-driven Learning Management System (LMS) for academic ins
 ## 🌐 Live Deployment & Repository
 
 - **Live Production Frontend (Netlify)**: https://papaya-halva-69a7bc.netlify.app
+- **Live Production Backend (Render)**: https://lms-backend-api-z581.onrender.com
+- **Backend API Docs (Swagger UI)**: https://lms-backend-api-z581.onrender.com/docs
+- **Backend Health Check**: https://lms-backend-api-z581.onrender.com/api/health
 - **GitHub Repository**: https://github.com/dharmishthakothari/LMS_Full_Stack_Project.git
-- **Active Feature Branch**: `feature/production-hardening-and-audit-fixes`
-- **GitHub Pull Request**: https://github.com/dharmishthakothari/LMS_Full_Stack_Project/pull/new/feature/production-hardening-and-audit-fixes
-- **Backend Blueprint (Render)**: Ready via [render.yaml](file:///d:/TOPS%20Technologies/LMS_Application_With_Vibe/render.yaml) & [backend/Procfile](file:///d:/TOPS%20Technologies/LMS_Application_With_Vibe/backend/Procfile)
 
 ---
 
