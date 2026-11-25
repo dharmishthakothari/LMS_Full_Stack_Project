@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import api from '../../services/api';
+import api, { downloadAuthenticatedFile } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { Award, Download, ShieldCheck, CheckCircle2 } from 'lucide-react';
@@ -85,13 +85,12 @@ export const CertificatePage = () => {
                   Verify Authenticity →
                 </NavLink>
 
-                <a
-                  href={`http://localhost:8000/api/certificates/${cert.id}/download`}
-                  download
-                  className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-colors shadow-sm"
+                <button
+                  onClick={() => downloadAuthenticatedFile(`/certificates/${cert.id}/download`, `Certificate_${cert.certificate_number}.pdf`)}
+                  className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-colors shadow-sm cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" /> Download PDF
-                </a>
+                </button>
               </div>
             </div>
           ))}

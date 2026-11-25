@@ -5,17 +5,23 @@ services:
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
-    healthCheckPath: /health
+    healthCheckPath: /api/health
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
       - key: DATABASE_URL
         sync: false
+      - key: JWT_SECRET
+        generateValue: true
       - key: SECRET_KEY
         generateValue: true
-      - key: ALGORITHM
+      - key: JWT_ALGORITHM
         value: HS256
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
-        value: 480
+        value: 1440
+      - key: STORAGE_BACKEND
+        value: local
       - key: CORS_ORIGINS
-        sync: false
+        value: https://lms-fullstack-vibe.netlify.app,http://localhost:5173
+      - key: FRONTEND_URL
+        value: https://lms-fullstack-vibe.netlify.app

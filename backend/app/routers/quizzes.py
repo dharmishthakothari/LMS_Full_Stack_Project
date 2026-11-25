@@ -235,6 +235,21 @@ def submit_quiz_answers(
         raise HTTPException(status_code=400, detail="This attempt has already been submitted.")
 
     now = datetime.utcnow()
+    
+    # Enforce quiz duration deadline: attempt must be submitted within duration_minutes (+60s network grace period)
+    if attempt.started_at and attempt.quiz.duration_minutes:
+        allowed_deadline = attempt.started_at + timedelta(minutes=attempt.quiz.duration_minutes)
+        grace_period = timedelta(seconds=60)
+        if now > (allowed_deadline + grace_period):
+            attempt.submitted_at = now
+            attempt.score = Decimal("0.00")
+            attempt.is_passed = False
+            db.commit()
+            raise HTTPException(
+                status_code=400,
+                detail=f"Quiz submission deadline exceeded. Time limit of {attempt.quiz.duration_minutes} minutes has expired."
+            )
+
     attempt.submitted_at = now
 
     # Server-side score calculation

@@ -8,6 +8,7 @@ from app.schemas.user import UserResponse
 from app.utils.security import verify_password, get_password_hash, create_access_token, decode_access_token
 from app.dependencies.auth import get_current_user
 from app.middleware.rate_limit import rate_limit_auth
+from app.services.email_service import send_password_reset_email
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
@@ -59,10 +60,12 @@ def forgot_password(req: ForgotPasswordRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == req.email).first()
     # Generate a short-lived reset token if user exists (never leak user existence in response message)
     if user and user.is_active:
-        create_access_token(
+        token = create_access_token(
             data={"sub": str(user.id), "purpose": "password_reset"},
             expires_delta=timedelta(minutes=30)
         )
+        full_name = f"{user.first_name} {user.last_name}".strip() or "User"
+        send_password_reset_email(to_email=user.email, reset_token=token, recipient_name=full_name)
     return {"message": "If this email is registered, a password reset link has been dispatched."}
 
 @router.post("/reset-password", dependencies=[Depends(rate_limit_auth)])

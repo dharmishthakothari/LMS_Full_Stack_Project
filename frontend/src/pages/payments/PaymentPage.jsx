@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../services/api';
+import api, { downloadAuthenticatedFile } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { Modal } from '../../components/Modal';
 import { Badge } from '../../components/Badge';
@@ -152,13 +152,12 @@ export const PaymentPage = () => {
                       {new Date(p.payment_date).toLocaleDateString()}
                     </td>
                     <td className="px-5 py-3.5 text-right">
-                      <a
-                        href={`http://localhost:8000/api/payments/${p.id}/receipt`}
-                        download
-                        className="inline-flex items-center gap-1 px-3 py-1 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-lg text-xs font-bold transition-colors"
+                      <button
+                        onClick={() => downloadAuthenticatedFile(`/payments/${p.id}/receipt`, `Receipt_${p.transaction_reference || p.id}.pdf`)}
+                        className="inline-flex items-center gap-1 px-3 py-1 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-lg text-xs font-bold transition-colors cursor-pointer"
                       >
                         <Download className="w-3.5 h-3.5" /> PDF
-                      </a>
+                      </button>
                     </td>
                   </tr>
                 ))}

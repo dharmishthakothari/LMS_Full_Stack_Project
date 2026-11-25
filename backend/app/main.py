@@ -12,7 +12,7 @@ from app.routers import (
     modules, batches, lectures, assignments,
     submissions, quizzes, attendance, progress,
     certificates, payments, communications,
-    reports, health
+    reports, health, files
 )
 
 app = FastAPI(
@@ -33,12 +33,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Static file serving for uploads (receipts, certificates, materials)
+# Static directory creation for receipts, certificates, materials (served securely via /api/files)
 os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
 
 # Include Routers
 app.include_router(health.router)
+app.include_router(files.router)
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(students.router)

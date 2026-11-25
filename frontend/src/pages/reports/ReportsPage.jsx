@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../services/api';
+import api, { downloadAuthenticatedFile } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { Download, BarChart3, TrendingUp, Users, Calendar, IndianRupee } from 'lucide-react';
@@ -37,8 +37,8 @@ export const ReportsPage = () => {
   if (loading) return <LoadingSpinner text="Aggregating academic report metrics..." />;
   if (!data) return null;
 
-  const downloadCsv = (type) => {
-    window.open(`http://localhost:8000/api/reports/export/csv?report_type=${type}`, '_blank');
+  const downloadCsv = async (type) => {
+    await downloadAuthenticatedFile(`/reports/export/csv?report_type=${type}`, `lms_${type}_report.csv`);
   };
 
   return (

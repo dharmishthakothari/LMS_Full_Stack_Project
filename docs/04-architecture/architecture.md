@@ -77,6 +77,8 @@ LMS_Application_With_Vibe/
 
 ## 3. Database Entity Relationship Overview
 
+![LMS Relational Database Architecture ERD](erd.png)
+
 The core schema comprises 24 relational tables organized into clear functional domains: Identity & Access, Academic Catalog, Batches & Delivery, Assessments & Grading, Student Engagement & Tracking, and Communications & Finance.
 
 ```mermaid

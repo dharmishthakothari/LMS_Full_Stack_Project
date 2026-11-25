@@ -15,8 +15,11 @@ from app.models import (
 )
 from app.utils.security import get_password_hash
 
-def seed():
-    db = SessionLocal()
+def seed(db=None):
+    should_close = False
+    if db is None:
+        db = SessionLocal()
+        should_close = True
     print("Seeding database with synthetic records...")
 
     try:
@@ -514,7 +517,8 @@ def seed():
         print(f"Error seeding database: {e}")
         raise
     finally:
-        db.close()
+        if should_close:
+            db.close()
 
 if __name__ == "__main__":
     seed()
