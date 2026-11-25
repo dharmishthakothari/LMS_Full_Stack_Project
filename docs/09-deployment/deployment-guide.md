@@ -33,9 +33,9 @@
    - `JWT_SECRET`: Generated automatically (cryptographically secure 256-bit).
    - `JWT_ALGORITHM`: `HS256`
    - `ACCESS_TOKEN_EXPIRE_MINUTES`: `1440` (24 Hours)
-   - `STORAGE_BACKEND`: `local` (or `s3` when S3 credentials provided)
-   - `CORS_ORIGINS`: `https://papaya-halva-69a7bc.netlify.app,https://lms-fullstack-vibe.netlify.app,http://localhost:5173`
-   - `FRONTEND_URL`: `https://papaya-halva-69a7bc.netlify.app`
+   - `STORAGE_BACKEND`: `s3` (recommended for persistent production storage; `local` for local dev only)
+   - `CORS_ORIGINS`: `https://lms-fullstack-platform.netlify.app,http://localhost:5173`
+   - `FRONTEND_URL`: `https://lms-fullstack-platform.netlify.app`
 
 4. **Database Initialization & Seeding on First Launch:**
    - In the Render Web Service Shell / SSH:
@@ -49,7 +49,7 @@
 ### 2.2 Live Frontend Deployment on Netlify
 
 The frontend is live and deployed:
-- **Production URL:** `https://papaya-halva-69a7bc.netlify.app`
+- **Production URL:** `https://lms-fullstack-platform.netlify.app`
 - **Build Command:** `npm run build`
 - **Publish Directory:** `dist`
 - **Environment Variable:** `VITE_API_BASE_URL` points to the live backend API route.
