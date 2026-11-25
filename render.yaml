@@ -22,6 +22,6 @@ services:
       - key: STORAGE_BACKEND
         value: local
       - key: CORS_ORIGINS
-        value: https://lms-fullstack-vibe.netlify.app,http://localhost:5173
+        value: https://papaya-halva-69a7bc.netlify.app,https://lms-fullstack-vibe.netlify.app,http://localhost:5173
       - key: FRONTEND_URL
-        value: https://lms-fullstack-vibe.netlify.app
+        value: https://papaya-halva-69a7bc.netlify.app

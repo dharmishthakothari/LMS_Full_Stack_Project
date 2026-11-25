@@ -42,6 +42,7 @@ class Settings(BaseSettings):
         "http://127.0.0.1:5173",
         "http://localhost:3000",
         "https://lms-fullstack-vibe.netlify.app",
+        "https://papaya-halva-69a7bc.netlify.app",
     ]
 
     model_config = SettingsConfigDict(

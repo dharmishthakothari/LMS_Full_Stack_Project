@@ -4,7 +4,7 @@
 [![React](https://img.shields.io/badge/Frontend-React%2019%20+%20Vite-61DAFB?style=flat&logo=react)](https://react.dev)
 [![MySQL](https://img.shields.io/badge/Database-MySQL%208.0-4479A1?style=flat&logo=mysql)](https://www.mysql.com)
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com)
-[![Pytest](https://img.shields.io/badge/Tests-16%20Passed%20(100%25)-brightgreen?style=flat&logo=pytest)](https://pytest.org)
+[![Pytest](https://img.shields.io/badge/Tests-20%20Passed%20(100%25)-brightgreen?style=flat&logo=pytest)](https://pytest.org)
 
 A centralized, database-driven Learning Management System (LMS) for academic institutions, trainers, and students. Built with **Python FastAPI**, **SQLAlchemy ORM**, **MySQL 8.0**, and **React.js + Tailwind CSS**.
 
@@ -12,9 +12,11 @@ A centralized, database-driven Learning Management System (LMS) for academic ins
 
 ## 🌐 Live Deployment & Repository
 
-- **Live Frontend (Netlify)**: https://lms-fullstack-vibe.netlify.app
+- **Live Production Frontend (Netlify)**: https://papaya-halva-69a7bc.netlify.app
 - **GitHub Repository**: https://github.com/dharmishthakothari/LMS_Full_Stack_Project.git
-- **Backend Blueprint (Render)**: Ready via [render.yaml](file:///d:/TOPS%20Technologies/LMS_Application_With_Vibe/render.yaml) & [backend/Procfile](file:///d:/TOPS%20Technologies/LMS_Application_With_Vibe/backend/Procfile) (set `VITE_API_BASE_URL` on Netlify once backend is hosted on Render)
+- **Active Feature Branch**: `feature/production-hardening-and-audit-fixes`
+- **GitHub Pull Request**: https://github.com/dharmishthakothari/LMS_Full_Stack_Project/pull/new/feature/production-hardening-and-audit-fixes
+- **Backend Blueprint (Render)**: Ready via [render.yaml](file:///d:/TOPS%20Technologies/LMS_Application_With_Vibe/render.yaml) & [backend/Procfile](file:///d:/TOPS%20Technologies/LMS_Application_With_Vibe/backend/Procfile)
 
 ---
 
