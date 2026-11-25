@@ -20,9 +20,15 @@ from app.routers import (
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Ensure database tables exist automatically on startup
+    # Ensure database tables and initial baseline seeds exist automatically on startup
     try:
         Base.metadata.create_all(bind=engine)
+        from app.database import SessionLocal
+        from app.models import User
+        with SessionLocal() as db:
+            if not db.query(User).first():
+                from seed_data import seed
+                seed(db=db)
     except Exception as e:
         print(f"Warning during database auto-init: {e}")
     yield
