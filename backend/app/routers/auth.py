@@ -48,8 +48,8 @@ def change_password(
 ):
     if not verify_password(req.current_password, current_user.password_hash):
         raise HTTPException(status_code=400, detail="Current password does not match.")
-    if len(req.new_password) < 6:
-        raise HTTPException(status_code=400, detail="New password must be at least 6 characters.")
+    if len(req.new_password) < 8:
+        raise HTTPException(status_code=400, detail="New password must be at least 8 characters.")
     
     current_user.password_hash = get_password_hash(req.new_password)
     db.commit()
@@ -73,8 +73,8 @@ def reset_password(req: ResetPasswordRequest, db: Session = Depends(get_db)):
     payload = decode_access_token(req.token)
     if not payload or payload.get("purpose") != "password_reset" or not payload.get("sub"):
         raise HTTPException(status_code=400, detail="Invalid or expired password reset token.")
-    if len(req.new_password) < 6:
-        raise HTTPException(status_code=400, detail="New password must be at least 6 characters.")
+    if len(req.new_password) < 8:
+        raise HTTPException(status_code=400, detail="New password must be at least 8 characters.")
 
     user = db.query(User).filter(User.id == int(payload["sub"])).first()
     if not user or not user.is_active:

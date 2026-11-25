@@ -20,7 +20,17 @@ services:
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
         value: 1440
       - key: STORAGE_BACKEND
-        value: local
+        value: s3
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_REGION
+        value: us-east-1
+      - key: S3_ENDPOINT_URL
+        sync: false
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
       - key: CORS_ORIGINS
         value: https://lms-fullstack-platform.netlify.app,https://lms-fullstack-vibe.netlify.app,http://localhost:5173
       - key: FRONTEND_URL

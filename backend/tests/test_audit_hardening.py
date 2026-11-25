@@ -23,19 +23,26 @@ def test_uploads_authenticated_access_and_security(client, student_token, admin_
     assert traversal_resp.status_code == 403
     assert "Directory traversal" in traversal_resp.json().get("detail", "")
 
-    # 3. Valid authenticated file request (generate a dummy test file under uploads)
+    # 3. Student attempting to access unregistered/unowned file must be rejected (403)
     test_file_dir = os.path.join(settings.UPLOAD_DIR, "test_docs")
     os.makedirs(test_file_dir, exist_ok=True)
     test_file_path = os.path.join(test_file_dir, "sample_document.txt")
     with open(test_file_path, "w", encoding="utf-8") as f:
         f.write("LMS Secure Material Content")
 
-    auth_resp = client.get(
+    student_forbidden = client.get(
         "/api/files/download?path=test_docs/sample_document.txt",
         headers={"Authorization": f"Bearer {student_token}"}
     )
-    assert auth_resp.status_code == 200
-    assert auth_resp.text == "LMS Secure Material Content"
+    assert student_forbidden.status_code == 403
+
+    # 4. Admin can download any file
+    admin_resp = client.get(
+        "/api/files/download?path=test_docs/sample_document.txt",
+        headers={"Authorization": f"Bearer {admin_token}"}
+    )
+    assert admin_resp.status_code == 200
+    assert admin_resp.text == "LMS Secure Material Content"
 
 def test_partial_payment_calculation_and_settlement(client, admin_token):
     """
