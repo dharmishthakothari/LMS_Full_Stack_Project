@@ -8,7 +8,7 @@ from alembic import context
 # Add backend directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.database import Base
+from app.database import Base, get_sqlalchemy_url_and_connect_args
 from app.config import settings
 import app.models
 
@@ -17,7 +17,8 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+_clean_url, _connect_args = get_sqlalchemy_url_and_connect_args(settings.DATABASE_URL)
+config.set_main_option("sqlalchemy.url", _clean_url)
 
 target_metadata = Base.metadata
 
@@ -38,6 +39,7 @@ def run_migrations_online() -> None:
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        connect_args=_connect_args,
     )
 
     with connectable.connect() as connection:

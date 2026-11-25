@@ -4,7 +4,7 @@
 [![React](https://img.shields.io/badge/Frontend-React%2019%20+%20Vite-61DAFB?style=flat&logo=react)](https://react.dev)
 [![MySQL](https://img.shields.io/badge/Database-MySQL%208.0-4479A1?style=flat&logo=mysql)](https://www.mysql.com)
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com)
-[![Pytest](https://img.shields.io/badge/Tests-20%20Passed%20(100%25)-brightgreen?style=flat&logo=pytest)](https://pytest.org)
+[![Pytest](https://img.shields.io/badge/Tests-22%20Passed%20(100%25)-brightgreen?style=flat&logo=pytest)](https://pytest.org)
 
 A centralized, database-driven Learning Management System (LMS) for academic institutions, trainers, and students. Built with **Python FastAPI**, **SQLAlchemy ORM**, **MySQL 8.0**, and **React.js + Tailwind CSS**.
 
@@ -54,20 +54,9 @@ $$\text{Progress} = (0.40 \times \text{Lectures}) + (0.30 \times \text{Assignmen
 
 ---
 
-## 🔑 Demonstration Accounts
+## 🔑 Local Development Seeding
 
-The database comes pre-seeded with synthetic demonstration accounts:
-
-| Role | Email | Password | Scope |
-|---|---|---|---|
-| **Admin** | `admin@lms.com` | `Admin@123` | Institute-wide Superuser |
-| **Instructor** | `dr.patel@lms.com` | `Instructor@123` | Full Stack Web Track Faculty |
-| **Instructor** | `er.verma@lms.com` | `Instructor@123` | Cloud & DevOps Faculty |
-| **Instructor** | `prof.sharma@lms.com` | `Instructor@123` | Data Science Faculty |
-| **Student** | `student1@lms.com` | `Student@123` | Enrolled Learner (Cert Eligible) |
-| **Student** | `student2@lms.com` ... `student10@lms.com` | `Student@123` | Enrolled Learners |
-
-*Tip: The login page provides quick one-click buttons to sign in as Admin, Instructor, or Student instantly.*
+For local development and testing, you can populate synthetic sample data (admin, instructors, students, courses, batches, and assessments) by running `python seed_data.py` inside `backend/` after running `alembic upgrade head`. Production credentials are never auto-seeded on startup or published in documentation.
 
 ---
 
