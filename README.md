@@ -10,6 +10,14 @@ A centralized, database-driven Learning Management System (LMS) for academic ins
 
 ---
 
+## 🌐 Live Deployment & Repository
+
+- **Live Frontend (Netlify)**: https://lms-fullstack-vibe.netlify.app
+- **GitHub Repository**: https://github.com/dharmishthakothari/LMS_Full_Stack_Project.git
+- **Backend Blueprint (Render)**: Ready via [render.yaml](file:///d:/TOPS%20Technologies/LMS_Application_With_Vibe/render.yaml) & [backend/Procfile](file:///d:/TOPS%20Technologies/LMS_Application_With_Vibe/backend/Procfile) (set `VITE_API_BASE_URL` on Netlify once backend is hosted on Render)
+
+---
+
 ## 🚀 Key Features
 
 ### 1. Role-Based Access Control (RBAC)
