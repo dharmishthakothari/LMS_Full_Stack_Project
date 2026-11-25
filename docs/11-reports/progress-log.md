@@ -13,3 +13,4 @@
 | Milestone 5 | Automated QA & Pytest Suite | Completed | 16 test cases executed with 100% pass rate. |
 | Milestone 6 | Modern React Frontend SPA | Completed | React 19 + Vite + Tailwind CSS + Recharts + Lucide Icons compiled with zero build errors. |
 | Milestone 7 | Final System Documentation & Manuals | Completed | Full 22-document suite, Postman collection, and README.md. |
+| Milestone 8 | Module Docs, Auth Recovery UI, Schema Modernization & Cloud Deployment | Completed | 15 module docs, `ForgotPassword`/`ResetPassword`/`NotificationsPage`, Pydantic v2 `ConfigDict`, wireframes, `render.yaml`/`netlify.toml`, GitHub push (`eeafeb9`), and Netlify live frontend (`https://lms-fullstack-vibe.netlify.app`). |

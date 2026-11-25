@@ -15,4 +15,9 @@
 - Automated Pytest test suite with 16 comprehensive integration and RBAC test cases (100% passing).
 - Modern SaaS React SPA built with Vite, Tailwind CSS, Lucide Icons, and Recharts charts.
 - Public certificate verification tool validating unique cryptographic verification codes against MySQL.
-- Full 22-document system specifications under `/docs`.
+- Full 22-document system specifications under `/docs`, including 15 per-module guides (`docs/06-modules/`), UI wireframes (`docs/02-design/wireframes/wireframes.md`), and demo script (`docs/11-reports/demo-script.md`).
+- Password recovery (`ForgotPassword.jsx`, `ResetPassword.jsx`) and dedicated `NotificationsPage.jsx` frontend views.
+- Cloud deployment configurations (`frontend/netlify.toml`, `frontend/vercel.json`, `render.yaml`, `backend/Procfile`) and live Netlify frontend deployment (`https://lms-fullstack-vibe.netlify.app`).
+
+#### Changed
+- Migrated all 25 Pydantic schema `Config` classes to Pydantic v2 `ConfigDict(from_attributes=True)`, eliminating deprecation warnings across all 16 Pytest tests.
