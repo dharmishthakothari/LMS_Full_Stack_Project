@@ -12,7 +12,7 @@ A centralized, database-driven Learning Management System (LMS) for academic ins
 
 ## 🌐 Live Deployment & Repository
 
-- **Live Production Frontend (Netlify)**: https://papaya-halva-69a7bc.netlify.app
+- **Live Production Frontend (Netlify)**: https://lms-fullstack-platform.netlify.app
 - **Live Production Backend (Render)**: https://lms-backend-api-z581.onrender.com
 - **Backend API Docs (Swagger UI)**: https://lms-backend-api-z581.onrender.com/docs
 - **Backend Health Check**: https://lms-backend-api-z581.onrender.com/api/health

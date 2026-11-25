@@ -41,8 +41,8 @@ class Settings(BaseSettings):
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
+        "https://lms-fullstack-platform.netlify.app",
         "https://lms-fullstack-vibe.netlify.app",
-        "https://papaya-halva-69a7bc.netlify.app",
     ]
 
     @field_validator("CORS_ORIGINS", mode="before")

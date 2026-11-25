@@ -6,7 +6,7 @@
 ---
 
 ## 1. Cloud Architecture Overview
-- **Frontend SPA:** Live on Netlify: **https://papaya-halva-69a7bc.netlify.app** (Site ID: `969d62c2-95ec-4386-a8f0-fb76a826e295`) with CDN edge distribution and automatic SPA redirect handling via `netlify.toml`.
+- **Frontend SPA:** Live on Netlify: **https://lms-fullstack-platform.netlify.app** with CDN edge distribution and automatic SPA redirect handling via `netlify.toml`.
 - **Backend API:** Configured for Render via `render.yaml` and `backend/Procfile` running Python 3.11 with Uvicorn workers.
 - **Managed Database:** Persistent MySQL 8.0 instance (AWS RDS, Aiven MySQL, or Clever Cloud MySQL).
 - **Persistent Storage:** S3-compatible bucket (or Render persistent disk) for PDF certificates, payment receipts, and uploaded study materials.
