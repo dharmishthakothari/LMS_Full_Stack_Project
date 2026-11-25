@@ -181,6 +181,19 @@ def start_quiz_attempt(
     if not quiz.is_published:
         raise HTTPException(status_code=400, detail="Quiz is not yet published.")
 
+    # Enforce quiz scheduling window (start_time / end_time)
+    now = datetime.utcnow()
+    if quiz.start_time and now < quiz.start_time:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Quiz has not started yet. Opens at {quiz.start_time.isoformat()}."
+        )
+    if quiz.end_time and now > quiz.end_time:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Quiz window has closed. Ended at {quiz.end_time.isoformat()}."
+        )
+
     # Check previous attempts
     past_attempts = db.query(QuizAttempt).filter(
         QuizAttempt.quiz_id == quiz_id,

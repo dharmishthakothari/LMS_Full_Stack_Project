@@ -94,6 +94,7 @@
 | `POST` | `/api/attendance` | Admin, Instructor | Upsert batch session attendance with audit trail |
 | `GET` | `/api/attendance/batch/{id}` | Admin, Instructor | Query session logs for a batch |
 | `GET` | `/api/attendance/student/{id}` | Authenticated | Summary percentage and session attendance history |
+| `GET` | `/api/progress/me` | Student | Convenience endpoint to retrieve logged-in student's course progress |
 | `GET` | `/api/progress/student/{id}` | Authenticated | Calculate weighted dynamic learning progress (Lectures 40%, Assignments 30%, Quizzes 30%) |
 
 ---
@@ -113,6 +114,7 @@
 |---|---|---|---|
 | `GET` | `/api/payments` | Authenticated | Financial ledger entries (scoped by user role) |
 | `POST` | `/api/payments` | Admin | Record fee collection, recompute balance, and generate PDF receipt |
+| `GET` | `/api/payments/student/{id}/summary` | Authenticated | Aggregate fee summary: total fee, total paid, outstanding balance |
 | `GET` | `/api/payments/{id}/receipt` | Authenticated | Download official PDF payment receipt |
 
 ---
@@ -125,6 +127,8 @@
 | `PUT` | `/api/notifications/read-all` | Authenticated | Mark all notifications read |
 | `GET` | `/api/announcements` | Authenticated | List notices targeted to role or batch |
 | `POST` | `/api/announcements` | Admin, Instructor | Publish announcement |
-| `GET` | `/api/reports/dashboard` | Authenticated | Role-tailored dynamic KPI metrics and Recharts series |
-| `GET` | `/api/reports/export/csv` | Admin, Instructor | Export tabular reports for Students, Payments, Attendance, Courses |
+| `GET` | `/api/reports/dashboard` | Authenticated | Role-tailored dynamic KPI metrics and Recharts series (database-derived) |
+| `GET` | `/api/reports/export/csv` | Admin, Instructor | Export tabular CSV reports for Students, Payments, Attendance, Courses |
+| `GET` | `/api/reports/export/excel` | Admin, Instructor | Export styled Excel (.xlsx) reports |
+| `GET` | `/api/reports/export/pdf` | Admin, Instructor | Export landscape PDF summary reports |
 | `GET` | `/api/health` | Public | System status and MySQL connectivity health check |

@@ -21,3 +21,8 @@
 
 #### Changed
 - Migrated all 25 Pydantic schema `Config` classes to Pydantic v2 `ConfigDict(from_attributes=True)`, eliminating deprecation warnings across all 16 Pytest tests.
+- Replaced synthetic enrollment trends in `/api/reports/dashboard` with dynamic, database-aggregated monthly enrollment queries via SQLAlchemy `func.extract`.
+- Enhanced quiz scheduling security in `/api/quizzes/{id}/start` with strict UTC time window enforcement (`start_time` / `end_time`).
+- Added convenience and aggregation endpoints: `GET /api/progress/me` and `GET /api/payments/student/{id}/summary`.
+- Added Notifications navigation item directly into the responsive sidebar for all user roles.
+- Enhanced Mermaid ERD in `docs/04-architecture/architecture.md` with full 24-entity visual schema.

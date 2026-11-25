@@ -8,6 +8,34 @@ from app.services.progress_service import calculate_student_course_progress
 
 router = APIRouter(prefix="/api/progress", tags=["Student Progress"])
 
+@router.get("/me")
+def get_my_progress(
+    course_id: Optional[int] = None,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Convenience endpoint — students can call /api/progress/me instead of /api/progress/student/{id}."""
+    if not current_user.student_profile:
+        raise HTTPException(status_code=400, detail="Student profile not found.")
+    student_id = current_user.student_profile.id
+
+    if course_id:
+        return calculate_student_course_progress(db, student_id, course_id)
+
+    course_ids = [enr.batch.course_id for enr in current_user.student_profile.enrollments if enr.batch and enr.batch.course_id]
+    courses = db.query(Course).filter(Course.id.in_(course_ids)).all() if course_ids else []
+    if not courses:
+        first_course = db.query(Course).first()
+        if first_course:
+            courses = [first_course]
+
+    results = []
+    for c in courses:
+        prog = calculate_student_course_progress(db, student_id, c.id)
+        if prog:
+            results.append(prog)
+    return results
+
 @router.get("/student/{student_id}")
 def get_student_progress(
     student_id: int,

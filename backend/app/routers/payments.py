@@ -119,6 +119,39 @@ def record_payment(
         "receipt_path": receipt_url
     }
 
+@router.get("/student/{student_id}/summary")
+def get_student_payment_summary(
+    student_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Aggregate payment summary: total fees, total paid, outstanding balance."""
+    if current_user.role.name == "student":
+        if not current_user.student_profile or current_user.student_profile.id != student_id:
+            raise HTTPException(status_code=403, detail="Access denied.")
+
+    student = db.query(Student).filter(Student.id == student_id).first()
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found.")
+
+    payments = db.query(Payment).filter(
+        Payment.student_id == student_id,
+        Payment.status.in_(["paid", "partially_paid"])
+    ).all()
+
+    total_fees = sum(p.total_fee for p in payments) if payments else Decimal("0.00")
+    total_paid = sum(p.paid_amount for p in payments) if payments else Decimal("0.00")
+    outstanding = sum(p.pending_amount for p in payments) if payments else Decimal("0.00")
+
+    return {
+        "student_id": student_id,
+        "student_name": f"{student.user.first_name} {student.user.last_name}",
+        "total_fees": float(total_fees),
+        "total_paid": float(total_paid),
+        "outstanding_balance": float(outstanding),
+        "payment_count": len(payments)
+    }
+
 @router.get("/{payment_id}/receipt")
 def download_receipt(
     payment_id: int,

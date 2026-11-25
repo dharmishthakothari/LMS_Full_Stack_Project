@@ -32,6 +32,7 @@ export const Sidebar = () => {
     { name: 'Certificates', path: '/certificates', icon: Award },
     { name: 'Fee Payments', path: '/payments', icon: CreditCard },
     { name: 'Announcements', path: '/announcements', icon: Bell },
+    { name: 'Notifications', path: '/notifications', icon: Bell },
     { name: 'Reports & Analytics', path: '/reports', icon: BarChart3 },
     { name: 'Profile & Settings', path: '/profile', icon: User },
   ];
@@ -45,6 +46,7 @@ export const Sidebar = () => {
     { name: 'Mark Attendance', path: '/attendance', icon: CheckSquare },
     { name: 'Student Progress', path: '/progress', icon: Award },
     { name: 'Announcements', path: '/announcements', icon: Bell },
+    { name: 'Notifications', path: '/notifications', icon: Bell },
     { name: 'Reports', path: '/reports', icon: BarChart3 },
     { name: 'Profile', path: '/profile', icon: User },
   ];
@@ -59,6 +61,7 @@ export const Sidebar = () => {
     { name: 'Course Progress', path: '/progress', icon: GraduationCap },
     { name: 'My Certificates', path: '/certificates', icon: Award },
     { name: 'Fee Receipts', path: '/payments', icon: CreditCard },
+    { name: 'Notifications', path: '/notifications', icon: Bell },
     { name: 'Announcements', path: '/announcements', icon: Bell },
     { name: 'Profile', path: '/profile', icon: User },
   ];

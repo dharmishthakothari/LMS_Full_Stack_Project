@@ -33,14 +33,23 @@ def get_dashboard_data(
         pending_fee_sum = db.query(func.sum(Payment.pending_amount)).scalar() or Decimal("0.00")
         pending_evals = db.query(Submission).filter(Submission.status.in_(["submitted", "under_review", "late_submission"])).count()
 
-        # Monthly Enrollment Trend (Synthetic / DB distribution)
-        enrollment_trends = [
-            {"month": "Jul", "enrollments": 14},
-            {"month": "Aug", "enrollments": 22},
-            {"month": "Sep", "enrollments": 35},
-            {"month": "Oct", "enrollments": 28},
-            {"month": "Nov", "enrollments": max(12, total_enrollments)},
-        ]
+        # Monthly Enrollment Trend — queried from database (never hardcoded)
+        from datetime import datetime, timedelta
+        import calendar
+        enrollment_trends = []
+        today = datetime.utcnow()
+        for i in range(5, -1, -1):
+            target = today - timedelta(days=30 * i)
+            month_name = calendar.month_abbr[target.month]
+            count = (
+                db.query(Enrollment)
+                .filter(
+                    func.extract("year", Enrollment.enrolled_at) == target.year,
+                    func.extract("month", Enrollment.enrolled_at) == target.month,
+                )
+                .count()
+            )
+            enrollment_trends.append({"month": month_name, "enrollments": count})
 
         # Course-wise Enrollments
         course_stats = []

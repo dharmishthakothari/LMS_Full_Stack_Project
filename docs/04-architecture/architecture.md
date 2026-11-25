@@ -77,6 +77,179 @@ LMS_Application_With_Vibe/
 
 ## 3. Database Entity Relationship Overview
 
+The core schema comprises 24 relational tables organized into clear functional domains: Identity & Access, Academic Catalog, Batches & Delivery, Assessments & Grading, Student Engagement & Tracking, and Communications & Finance.
+
+```mermaid
+erDiagram
+    ROLES ||--o{ USERS : assigns
+    USERS ||--o| INSTRUCTORS : profiles
+    USERS ||--o| STUDENTS : profiles
+    USERS ||--o{ NOTIFICATIONS : receives
+    USERS ||--o{ ANNOUNCEMENTS : publishes
+
+    COURSES ||--o{ COURSE_MODULES : contains
+    COURSES ||--o{ BATCHES : offers
+    COURSES ||--o{ PAYMENTS : charges
+    COURSES ||--o{ CERTIFICATES : grants
+
+    COURSE_MODULES ||--o{ LECTURES : includes
+    LECTURES ||--o{ STUDY_MATERIALS : provides
+    LECTURES ||--o{ LECTURE_PROGRESS : tracks
+
+    INSTRUCTORS ||--o{ BATCHES : leads
+    BATCHES ||--o{ ENROLLMENTS : registers
+    STUDENTS ||--o{ ENROLLMENTS : joins
+
+    BATCHES ||--o{ ASSIGNMENTS : assigns
+    ASSIGNMENTS ||--o{ SUBMISSIONS : receives
+    SUBMISSIONS ||--o{ ASSIGNMENT_FEEDBACK : evaluates
+
+    BATCHES ||--o{ QUIZZES : schedules
+    QUIZZES ||--o{ QUESTIONS : contains
+    QUESTIONS ||--o{ QUIZ_OPTIONS : offers
+    QUIZZES ||--o{ QUIZ_ATTEMPTS : logs
+    STUDENTS ||--o{ QUIZ_ATTEMPTS : takes
+    QUIZ_ATTEMPTS ||--o{ QUIZ_ANSWERS : records
+    QUESTIONS ||--o{ QUIZ_ANSWERS : answers
+
+    BATCHES ||--o{ ATTENDANCE : marks
+    STUDENTS ||--o{ ATTENDANCE : attends
+
+    STUDENTS ||--o{ LECTURE_PROGRESS : completes
+    STUDENTS ||--o{ CERTIFICATES : earns
+    STUDENTS ||--o{ PAYMENTS : pays
+    BATCHES ||--o{ ANNOUNCEMENTS : targets
+
+    ROLES {
+        int id PK
+        string name
+        string description
+    }
+    USERS {
+        int id PK
+        string email UK
+        string hashed_password
+        string first_name
+        string last_name
+        int role_id FK
+        boolean is_active
+    }
+    INSTRUCTORS {
+        int id PK
+        int user_id FK,UK
+        string employee_code UK
+        string designation
+        string department
+    }
+    STUDENTS {
+        int id PK
+        int user_id FK,UK
+        string enrollment_number UK
+        date date_of_birth
+        date joining_date
+    }
+    COURSES {
+        int id PK
+        string code UK
+        string title
+        decimal fee
+        string status
+    }
+    COURSE_MODULES {
+        int id PK
+        int course_id FK
+        string title
+        int sequence_order
+    }
+    LECTURES {
+        int id PK
+        int module_id FK
+        string title
+        int duration_minutes
+        string video_url
+    }
+    BATCHES {
+        int id PK
+        int course_id FK
+        int instructor_id FK
+        string name
+        int capacity
+        string status
+    }
+    ENROLLMENTS {
+        int id PK
+        int student_id FK
+        int batch_id FK
+        datetime enrolled_at
+        string status
+    }
+    ASSIGNMENTS {
+        int id PK
+        int batch_id FK
+        string title
+        datetime due_date
+        int max_score
+    }
+    SUBMISSIONS {
+        int id PK
+        int assignment_id FK
+        int student_id FK
+        datetime submitted_at
+        string status
+        decimal score
+    }
+    QUIZZES {
+        int id PK
+        int batch_id FK
+        string title
+        int duration_minutes
+        int passing_marks
+        boolean is_published
+    }
+    QUESTIONS {
+        int id PK
+        int quiz_id FK
+        string question_text
+        int marks
+    }
+    QUIZ_OPTIONS {
+        int id PK
+        int question_id FK
+        string option_text
+        boolean is_correct
+    }
+    QUIZ_ATTEMPTS {
+        int id PK
+        int quiz_id FK
+        int student_id FK
+        decimal score
+        boolean is_passed
+    }
+    ATTENDANCE {
+        int id PK
+        int batch_id FK
+        int student_id FK
+        date session_date
+        string status
+    }
+    CERTIFICATES {
+        int id PK
+        int student_id FK
+        int course_id FK
+        string certificate_number UK
+        string verification_hash UK
+    }
+    PAYMENTS {
+        int id PK
+        int student_id FK
+        int course_id FK
+        decimal total_fee
+        decimal paid_amount
+        decimal pending_amount
+        string status
+    }
+```
+
 The core entities form a comprehensive academic graph:
 - `users` (1) <---> (1) `roles`
 - `users` (1) <---> (0..1) `instructors`
