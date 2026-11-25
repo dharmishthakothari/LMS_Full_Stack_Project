@@ -6,34 +6,51 @@
 ---
 
 ## 1. Cloud Architecture Overview
-- **Frontend SPA:** Hosted on Vercel or Netlify with automatic CDN edge caching and client-side URL rewriting (`/* -> /index.html`).
-- **Backend API:** Hosted on Render, Railway, or AWS Elastic Beanstalk running Gunicorn/Uvicorn workers.
-- **Managed Database:** Persistent MySQL 8.0 instance (AWS RDS, PlanetScale, or Aiven MySQL).
-- **Persistent Storage:** Persistent volume or S3-compatible bucket for PDF certificates and receipts.
+- **Frontend SPA:** Live on Netlify: **https://papaya-halva-69a7bc.netlify.app** (Site ID: `969d62c2-95ec-4386-a8f0-fb76a826e295`) with CDN edge distribution and automatic SPA redirect handling via `netlify.toml`.
+- **Backend API:** Configured for Render via `render.yaml` and `backend/Procfile` running Python 3.11 with Uvicorn workers.
+- **Managed Database:** Persistent MySQL 8.0 instance (AWS RDS, Aiven MySQL, or Clever Cloud MySQL).
+- **Persistent Storage:** S3-compatible bucket (or Render persistent disk) for PDF certificates, payment receipts, and uploaded study materials.
 
 ---
 
 ## 2. Step-by-Step Deployment Procedure
 
-### 2.1 Backend Deployment (e.g. Render / AWS)
-1. Set Environment Variables in host dashboard:
-   - `DATABASE_URL`: `mysql+pymysql://<user>:<password>@<host>:3306/<dbname>?charset=utf8mb4`
-   - `JWT_SECRET`: Generate a 64-character random cryptographic secret
-   - `CORS_ORIGINS`: `["https://your-frontend.vercel.app"]`
-2. Build Command: `pip install -r backend/requirements.txt`
-3. Pre-Deploy Migration Command: `cd backend && alembic upgrade head && python seed_data.py`
-4. Start Command: `cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-5. Health Check Endpoint: `/api/health`
+### 2.1 Backend Deployment on Render (1-Click Blueprint)
 
-### 2.2 Frontend Deployment (e.g. Vercel)
-1. Root Directory: `frontend`
-2. Build Command: `npm run build`
-3. Output Directory: `dist`
-4. Environment Variables:
-   - `VITE_API_BASE_URL`: `https://your-backend.onrender.com/api`
-5. SPA Routing: Configure `vercel.json` rewrites:
-   ```json
-   {
-     "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
-   }
-   ```
+1. **Connect GitHub to Render:**
+   - Go to [https://dashboard.render.com/blueprints/new](https://dashboard.render.com/blueprints/new).
+   - Connect your GitHub repository: `https://github.com/dharmishthakothari/LMS_Full_Stack_Project.git`.
+   - Render will automatically read the root [`render.yaml`](file:///d:/TOPS%20Technologies/LMS_Application_With_Vibe/render.yaml) file.
+
+2. **Database Provisioning (Hosted MySQL 8.0):**
+   - In Render or via a free cloud MySQL provider (e.g. [Aiven.io](https://aiven.io) or [Clever Cloud](https://www.clever-cloud.com)):
+     - Create a MySQL 8.0 service.
+     - Copy the external connection URI:
+       `mysql+pymysql://<user>:<password>@<host>:<port>/<dbname>?charset=utf8mb4`
+   - In Render, paste this URI as the value for the `DATABASE_URL` environment variable.
+
+3. **Automatic Environment Variables Managed by `render.yaml`:**
+   - `JWT_SECRET`: Generated automatically (cryptographically secure 256-bit).
+   - `JWT_ALGORITHM`: `HS256`
+   - `ACCESS_TOKEN_EXPIRE_MINUTES`: `1440` (24 Hours)
+   - `STORAGE_BACKEND`: `local` (or `s3` when S3 credentials provided)
+   - `CORS_ORIGINS`: `https://papaya-halva-69a7bc.netlify.app,https://lms-fullstack-vibe.netlify.app,http://localhost:5173`
+   - `FRONTEND_URL`: `https://papaya-halva-69a7bc.netlify.app`
+
+4. **Database Initialization & Seeding on First Launch:**
+   - In the Render Web Service Shell / SSH:
+     ```bash
+     cd backend
+     python -m alembic upgrade head
+     python seed_data.py
+     ```
+   - Health check will report healthy at `/api/health`.
+
+### 2.2 Live Frontend Deployment on Netlify
+
+The frontend is live and deployed:
+- **Production URL:** `https://papaya-halva-69a7bc.netlify.app`
+- **Build Command:** `npm run build`
+- **Publish Directory:** `dist`
+- **Environment Variable:** `VITE_API_BASE_URL` points to the live backend API route.
+- All downloads use authenticated Axios blob streaming with Bearer token injection.
