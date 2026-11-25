@@ -10,6 +10,7 @@ from app.models import Lecture, CourseModule, StudyMaterial, LectureProgress, Us
 from app.schemas.lecture import LectureResponse, LectureCreate, LectureUpdate, StudyMaterialResponse
 from app.dependencies.auth import get_current_user, require_role
 from app.utils.file_validator import validate_and_read_upload, ALLOWED_MATERIAL_EXTENSIONS
+from app.services.storage_service import save_bytes
 
 router = APIRouter(prefix="/api/lectures", tags=["Lectures"])
 
@@ -147,19 +148,13 @@ async def upload_study_material(
     if not lec:
         raise HTTPException(status_code=404, detail="Lecture not found.")
 
-    mat_dir = os.path.join(settings.UPLOAD_DIR, "materials")
-    os.makedirs(mat_dir, exist_ok=True)
-
     clean_name, contents = await validate_and_read_upload(file, ALLOWED_MATERIAL_EXTENSIONS)
-    filepath = os.path.join(mat_dir, clean_name)
-
-    with open(filepath, "wb") as f:
-        f.write(contents)
+    stored_path = save_bytes(f"materials/{clean_name}", contents, content_type=file.content_type)
 
     material = StudyMaterial(
         lecture_id=lecture_id,
         title=title,
-        file_path=f"/uploads/materials/{clean_name}",
+        file_path=stored_path,
         file_type=file.content_type or "application/octet-stream",
         file_size_bytes=len(contents)
     )

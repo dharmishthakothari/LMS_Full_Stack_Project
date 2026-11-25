@@ -10,6 +10,7 @@ from app.models import Submission, Assignment, AssignmentFeedback, User, Enrollm
 from app.schemas.assignment import EvaluateSubmissionRequest
 from app.dependencies.auth import get_current_user, require_role
 from app.utils.file_validator import validate_and_read_upload, ALLOWED_SUBMISSION_EXTENSIONS
+from app.services.storage_service import save_bytes
 
 router = APIRouter(prefix="/api/submissions", tags=["Submissions"])
 
@@ -41,15 +42,10 @@ async def submit_assignment(
     now = datetime.utcnow()
     status_str = "late_submission" if now > assign.due_date else "submitted"
 
-    # Save file safely
-    sub_dir = os.path.join(settings.UPLOAD_DIR, "submissions")
-    os.makedirs(sub_dir, exist_ok=True)
+    # Save file safely via storage abstraction (local or S3)
     safe_name, contents = await validate_and_read_upload(file, ALLOWED_SUBMISSION_EXTENSIONS)
     filename = f"sub_{student_id}_{safe_name}"
-    filepath = os.path.join(sub_dir, filename)
-
-    with open(filepath, "wb") as f:
-        f.write(contents)
+    stored_path = save_bytes(f"submissions/{filename}", contents, content_type=file.content_type)
 
     submission = db.query(Submission).filter(
         Submission.assignment_id == assignment_id,
@@ -57,14 +53,14 @@ async def submit_assignment(
     ).first()
 
     if submission:
-        submission.file_path = f"/uploads/submissions/{filename}"
+        submission.file_path = stored_path
         submission.submitted_at = now
         submission.status = status_str
     else:
         submission = Submission(
             assignment_id=assignment_id,
             student_id=student_id,
-            file_path=f"/uploads/submissions/{filename}",
+            file_path=stored_path,
             submitted_at=now,
             status=status_str
         )
