@@ -90,6 +90,17 @@ export const Header = ({ title }) => {
                   ))
                 )}
               </div>
+              <div className="px-4 py-2 border-t border-slate-100 text-center">
+                <button
+                  onClick={() => {
+                    setShowNotifDropdown(false);
+                    navigate('/notifications');
+                  }}
+                  className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                >
+                  View all notifications &rarr;
+                </button>
+              </div>
             </div>
           )}
         </div>

@@ -6,6 +6,8 @@ import { DashboardLayout } from './layouts/DashboardLayout';
 
 // Pages
 import { Login } from './pages/auth/Login';
+import { ForgotPassword } from './pages/auth/ForgotPassword';
+import { ResetPassword } from './pages/auth/ResetPassword';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { InstructorDashboard } from './pages/instructor/InstructorDashboard';
 import { StudentDashboard } from './pages/student/StudentDashboard';
@@ -24,6 +26,7 @@ import { CertificatePage } from './pages/certificates/CertificatePage';
 import { VerifyCertificate } from './pages/certificates/VerifyCertificate';
 import { PaymentPage } from './pages/payments/PaymentPage';
 import { AnnouncementsPage } from './pages/communications/AnnouncementsPage';
+import { NotificationsPage } from './pages/communications/NotificationsPage';
 import { ReportsPage } from './pages/reports/ReportsPage';
 import { ProfilePage } from './pages/profile/ProfilePage';
 
@@ -44,6 +47,8 @@ export default function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/verify-certificate" element={<VerifyCertificate />} />
           <Route path="/" element={<RootRedirect />} />
 
@@ -78,6 +83,7 @@ export default function App() {
               <Route path="/certificates" element={<CertificatePage />} />
               <Route path="/payments" element={<PaymentPage />} />
               <Route path="/announcements" element={<AnnouncementsPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/profile" element={<ProfilePage />} />
             </Route>

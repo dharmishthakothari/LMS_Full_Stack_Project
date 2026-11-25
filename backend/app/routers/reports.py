@@ -203,6 +203,34 @@ def get_dashboard_data(
             }
         }
 
+def _build_report_rows(db: Session, report_type: str):
+    """Build uniform headers and rows for CSV, Excel, and PDF report exports."""
+    if report_type == "students":
+        headers = ["Student ID", "Full Name", "Email", "Phone", "Status", "Joining Date"]
+        rows = [
+            [s.id, f"{s.user.first_name} {s.user.last_name}", s.user.email, s.user.phone or "", "Active" if s.user.is_active else "Inactive", str(s.joining_date)]
+            for s in db.query(Student).all()
+        ]
+    elif report_type == "payments":
+        headers = ["Payment ID", "Transaction Ref", "Student", "Course", "Total Fee", "Paid Amount", "Pending Balance", "Status", "Date"]
+        rows = [
+            [p.id, p.transaction_reference, f"{p.student.user.first_name} {p.student.user.last_name}", p.course.title, float(p.total_fee), float(p.paid_amount), float(p.pending_amount), p.status, p.payment_date.strftime("%Y-%m-%d")]
+            for p in db.query(Payment).all()
+        ]
+    elif report_type == "attendance":
+        headers = ["Attendance ID", "Batch", "Student", "Date", "Status"]
+        rows = [
+            [a.id, a.batch.name if a.batch else "", f"{a.student.user.first_name} {a.student.user.last_name}", str(a.session_date), a.status]
+            for a in db.query(Attendance).all()
+        ]
+    else:
+        headers = ["ID", "Title", "Category", "Fee", "Status"]
+        rows = [
+            [c.id, c.title, c.category, float(c.fee), c.status]
+            for c in db.query(Course).all()
+        ]
+    return headers, rows
+
 @router.get("/export/csv")
 def export_reports_csv(
     report_type: str = "students",
@@ -212,33 +240,81 @@ def export_reports_csv(
     import csv
     import io
 
+    headers, rows = _build_report_rows(db, report_type)
     output = io.StringIO()
     writer = csv.writer(output)
+    writer.writerow(headers)
+    writer.writerows(rows)
 
-    if report_type == "students":
-        writer.writerow(["Student ID", "Full Name", "Email", "Phone", "Status", "Joining Date"])
-        students = db.query(Student).all()
-        for s in students:
-            writer.writerow([s.id, f"{s.user.first_name} {s.user.last_name}", s.user.email, s.user.phone or "", "Active" if s.user.is_active else "Inactive", s.joining_date])
-    elif report_type == "payments":
-        writer.writerow(["Payment ID", "Transaction Ref", "Student", "Course", "Total Fee", "Paid Amount", "Pending Balance", "Status", "Date"])
-        payments = db.query(Payment).all()
-        for p in payments:
-            writer.writerow([p.id, p.transaction_reference, f"{p.student.user.first_name} {p.student.user.last_name}", p.course.title, float(p.total_fee), float(p.paid_amount), float(p.pending_amount), p.status, p.payment_date.strftime("%Y-%m-%d")])
-    elif report_type == "attendance":
-        writer.writerow(["Attendance ID", "Batch", "Student", "Date", "Status"])
-        atts = db.query(Attendance).all()
-        for a in atts:
-            writer.writerow([a.id, a.batch.name if a.batch else "", f"{a.student.user.first_name} {a.student.user.last_name}", a.session_date, a.status])
-    else:
-        writer.writerow(["ID", "Title", "Category", "Fee", "Status"])
-        courses = db.query(Course).all()
-        for c in courses:
-            writer.writerow([c.id, c.title, c.category, float(c.fee), c.status])
-
-    csv_data = output.getvalue()
     return Response(
-        content=csv_data,
+        content=output.getvalue(),
         media_type="text/csv",
         headers={"Content-Disposition": f"attachment; filename=lms_{report_type}_report.csv"}
+    )
+
+@router.get("/export/excel")
+def export_reports_excel(
+    report_type: str = "students",
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role(["admin", "instructor"]))
+):
+    import io
+    from openpyxl import Workbook
+
+    headers, rows = _build_report_rows(db, report_type)
+    wb = Workbook()
+    ws = wb.active
+    ws.title = report_type.capitalize()
+    ws.append(headers)
+    for row in rows:
+        ws.append(row)
+
+    output = io.BytesIO()
+    wb.save(output)
+    output.seek(0)
+    return Response(
+        content=output.getvalue(),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f"attachment; filename=lms_{report_type}_report.xlsx"}
+    )
+
+@router.get("/export/pdf")
+def export_reports_pdf(
+    report_type: str = "students",
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role(["admin", "instructor"]))
+):
+    import io
+    from reportlab.lib.pagesizes import letter, landscape
+    from reportlab.pdfgen import canvas
+
+    headers, rows = _build_report_rows(db, report_type)
+    buffer = io.BytesIO()
+    c = canvas.Canvas(buffer, pagesize=landscape(letter))
+    width, height = landscape(letter)
+
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(40, height - 45, f"LMS Institute Report: {report_type.capitalize()}")
+    c.setFont("Helvetica-Bold", 9)
+    y = height - 80
+    c.drawString(40, y, " | ".join(headers))
+    c.line(40, y - 4, width - 40, y - 4)
+    y -= 20
+
+    c.setFont("Helvetica", 8)
+    for row in rows[:40]:
+        line = " | ".join(str(cell)[:22] for cell in row)
+        c.drawString(40, y, line)
+        y -= 14
+        if y < 40:
+            c.showPage()
+            c.setFont("Helvetica", 8)
+            y = height - 40
+
+    c.save()
+    buffer.seek(0)
+    return Response(
+        content=buffer.getvalue(),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=lms_{report_type}_report.pdf"}
     )

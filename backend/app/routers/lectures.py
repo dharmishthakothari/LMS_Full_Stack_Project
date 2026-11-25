@@ -9,6 +9,7 @@ from app.config import settings
 from app.models import Lecture, CourseModule, StudyMaterial, LectureProgress, User
 from app.schemas.lecture import LectureResponse, LectureCreate, LectureUpdate, StudyMaterialResponse
 from app.dependencies.auth import get_current_user, require_role
+from app.utils.file_validator import validate_and_read_upload, ALLOWED_MATERIAL_EXTENSIONS
 
 router = APIRouter(prefix="/api/lectures", tags=["Lectures"])
 
@@ -148,11 +149,10 @@ async def upload_study_material(
 
     mat_dir = os.path.join(settings.UPLOAD_DIR, "materials")
     os.makedirs(mat_dir, exist_ok=True)
-    
-    clean_name = f"{uuid.uuid4().hex}_{file.filename}"
+
+    clean_name, contents = await validate_and_read_upload(file, ALLOWED_MATERIAL_EXTENSIONS)
     filepath = os.path.join(mat_dir, clean_name)
-    
-    contents = await file.read()
+
     with open(filepath, "wb") as f:
         f.write(contents)
 

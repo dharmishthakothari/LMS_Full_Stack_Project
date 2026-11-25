@@ -5,12 +5,13 @@ from app.database import get_db
 from app.models import User, Role
 from app.schemas.auth import LoginRequest, Token, ChangePasswordRequest, ForgotPasswordRequest, ResetPasswordRequest
 from app.schemas.user import UserResponse
-from app.utils.security import verify_password, get_password_hash, create_access_token
+from app.utils.security import verify_password, get_password_hash, create_access_token, decode_access_token
 from app.dependencies.auth import get_current_user
+from app.middleware.rate_limit import rate_limit_auth
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=Token, dependencies=[Depends(rate_limit_auth)])
 def login(credentials: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == credentials.email).first()
     if not user or not verify_password(credentials.password, user.password_hash):
@@ -53,15 +54,31 @@ def change_password(
     db.commit()
     return {"message": "Password updated successfully."}
 
-@router.post("/forgot-password")
+@router.post("/forgot-password", dependencies=[Depends(rate_limit_auth)])
 def forgot_password(req: ForgotPasswordRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == req.email).first()
-    # Always return success to prevent email enumeration
+    # Generate a short-lived reset token if user exists (never leak user existence in response message)
+    if user and user.is_active:
+        create_access_token(
+            data={"sub": str(user.id), "purpose": "password_reset"},
+            expires_delta=timedelta(minutes=30)
+        )
     return {"message": "If this email is registered, a password reset link has been dispatched."}
 
-@router.post("/reset-password")
+@router.post("/reset-password", dependencies=[Depends(rate_limit_auth)])
 def reset_password(req: ResetPasswordRequest, db: Session = Depends(get_db)):
-    # Standard reset logic
+    payload = decode_access_token(req.token)
+    if not payload or payload.get("purpose") != "password_reset" or not payload.get("sub"):
+        raise HTTPException(status_code=400, detail="Invalid or expired password reset token.")
+    if len(req.new_password) < 6:
+        raise HTTPException(status_code=400, detail="New password must be at least 6 characters.")
+
+    user = db.query(User).filter(User.id == int(payload["sub"])).first()
+    if not user or not user.is_active:
+        raise HTTPException(status_code=404, detail="User account not found or inactive.")
+
+    user.password_hash = get_password_hash(req.new_password)
+    db.commit()
     return {"message": "Password reset token validated. Password updated."}
 
 @router.post("/logout")
