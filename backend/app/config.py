@@ -1,3 +1,4 @@
+import hashlib
 import os
 import secrets
 from typing import List, Union
@@ -69,8 +70,9 @@ class Settings(BaseSettings):
     @classmethod
     def validate_jwt_secret(cls, v):
         secret = v or os.getenv("JWT_SECRET") or os.getenv("SECRET_KEY")
-        # Explicitly check for absence or legacy exposed default in git history
-        if not secret or secret == "REDACTED_LEGACY_JWT_SECRET":
+        # Explicitly check for absence or legacy exposed default via SHA-256 hash
+        legacy_hash = "32d1545f1d494f5148c6fd7a27595589149eae8c79f33efbcc2dae2c1affe48b"
+        if not secret or hashlib.sha256(secret.encode("utf-8")).hexdigest() == legacy_hash:
             raise RuntimeError(
                 "CRITICAL SECURITY CONFIGURATION ERROR: JWT_SECRET environment variable is missing or using an insecure legacy default. "
                 "Application startup aborted. Please provide a cryptographically secure 256-bit secret key in your environment or .env file."

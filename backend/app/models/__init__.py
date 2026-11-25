@@ -23,6 +23,7 @@ from app.models.certificate import Certificate
 from app.models.payment import Payment
 from app.models.notification import Notification
 from app.models.announcement import Announcement
+from app.models.rate_limit import RateLimitEntry
 
 __all__ = [
     "Base",
@@ -50,4 +51,5 @@ __all__ = [
     "Payment",
     "Notification",
     "Announcement",
+    "RateLimitEntry",
 ]
