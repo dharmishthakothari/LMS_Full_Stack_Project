@@ -4,7 +4,7 @@
 [![React](https://img.shields.io/badge/Frontend-React%2019%20+%20Vite-61DAFB?style=flat&logo=react)](https://react.dev)
 [![MySQL](https://img.shields.io/badge/Database-MySQL%208.0-4479A1?style=flat&logo=mysql)](https://www.mysql.com)
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com)
-[![Pytest](https://img.shields.io/badge/Tests-22%20Passed%20(100%25)-brightgreen?style=flat&logo=pytest)](https://pytest.org)
+[![Pytest](https://img.shields.io/badge/Tests-27%20Passed%20(100%25)-brightgreen?style=flat&logo=pytest)](https://pytest.org)
 
 A centralized, database-driven Learning Management System (LMS) for academic institutions, trainers, and students. Built with **Python FastAPI**, **SQLAlchemy ORM**, **MySQL 8.0**, and **React.js + Tailwind CSS**.
 
