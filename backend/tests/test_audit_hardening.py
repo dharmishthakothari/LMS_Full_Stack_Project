@@ -138,3 +138,28 @@ def test_quiz_timeout_deadline_enforcement(client, student_token, db_session):
     submit_res = client.post("/api/quizzes/submit", json=submit_payload, headers={"Authorization": f"Bearer {student_token}"})
     assert submit_res.status_code == 400
     assert "deadline exceeded" in submit_res.json()["detail"].lower()
+
+
+def test_password_minimum_length_8_chars(client, student_token):
+    """Password change must reject passwords shorter than 8 characters."""
+    res = client.post(
+        "/api/auth/change-password",
+        json={"current_password": "Student@123", "new_password": "short7"},
+        headers={"Authorization": f"Bearer {student_token}"}
+    )
+    assert res.status_code == 400
+    assert "8 characters" in res.json()["detail"]
+
+
+def test_magic_byte_validation_rejects_spoofed_pdf(client, student_token):
+    """Uploading a non-PDF payload with a .pdf extension must be rejected by magic-byte validation."""
+    files = {"file": ("malicious.pdf", b"NOT_A_REAL_PDF_HEADER_DATA", "application/pdf")}
+    res = client.post(
+        "/api/submissions",
+        data={"assignment_id": 1},
+        files=files,
+        headers={"Authorization": f"Bearer {student_token}"}
+    )
+    assert res.status_code == 400
+    assert "does not match" in res.json()["detail"]
+

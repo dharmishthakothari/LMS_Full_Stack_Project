@@ -4,14 +4,14 @@ import axios from 'axios';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 if (!API_BASE_URL) {
-  console.warn(
-    "CRITICAL CONFIGURATION NOTICE: VITE_API_BASE_URL environment variable is not defined. " +
-    "API calls will target relative paths. Set VITE_API_BASE_URL in Netlify/Render environments."
+  throw new Error(
+    "CRITICAL CONFIGURATION ERROR: VITE_API_BASE_URL environment variable is not defined. " +
+    "Set VITE_API_BASE_URL in Netlify/Render or .env before building or running the app."
   );
 }
 
 const api = axios.create({
-  baseURL: API_BASE_URL || '',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },

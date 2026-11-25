@@ -92,10 +92,8 @@ LMS Academic Institute
             logger.error(f"Failed to send email via SMTP to {to_email}: {e}")
             # Fall through to logging
     
-    # Safe development fallback: log the reset link so developer/tester can access it
+    # Safe development fallback: never log raw reset tokens or URLs
     logger.warning(
-        f"[EMAIL SERVICE SIMULATION] Password reset dispatched to {to_email}.\n"
-        f"Reset URL: {reset_url}\n"
-        f"Token: {reset_token}"
+        f"[EMAIL SERVICE] SMTP not configured; skipped password reset email dispatch for {to_email}."
     )
     return True

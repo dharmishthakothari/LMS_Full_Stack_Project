@@ -18,29 +18,13 @@ from app.routers import (
     reports, health, files
 )
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Ensure database tables and initial baseline seeds exist automatically on startup
-    try:
-        Base.metadata.create_all(bind=engine)
-        from app.database import SessionLocal
-        from app.models import User
-        with SessionLocal() as db:
-            if not db.query(User).first():
-                from seed_data import seed
-                seed(db=db)
-    except Exception as e:
-        print(f"Warning during database auto-init: {e}")
-    yield
-
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
     description="Enterprise Full Stack Learning Management System (LMS) REST API with Role-Based Access Control.",
-    docs_url="/docs",
-    redoc_url="/redoc",
-    openapi_url="/openapi.json",
-    lifespan=lifespan
+    docs_url="/docs" if settings.DEBUG else None,
+    redoc_url="/redoc" if settings.DEBUG else None,
+    openapi_url="/openapi.json" if settings.DEBUG else None,
 )
 
 # CORS configuration

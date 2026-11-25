@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Learning Management System (LMS)"
     VERSION: str = "1.1.0"
     API_V1_STR: str = "/api"
+    DEBUG: bool = False
 
     DATABASE_URL: str = "mysql+pymysql://root:root@localhost:3306/lms_db?charset=utf8mb4"
     TEST_DATABASE_URL: str = "sqlite:///./test_lms.db"
@@ -35,14 +36,12 @@ class Settings(BaseSettings):
     SMTP_USER: str = ""
     SMTP_PASSWORD: str = ""
     FROM_EMAIL: str = "noreply@lms-institute.edu"
-    FRONTEND_URL: str = "https://lms-fullstack-vibe.netlify.app"
+    FRONTEND_URL: str = "https://lms-fullstack-platform.netlify.app"
 
     CORS_ORIGINS: Union[List[str], str] = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "http://localhost:3000",
         "https://lms-fullstack-platform.netlify.app",
-        "https://lms-fullstack-vibe.netlify.app",
     ]
 
     @field_validator("CORS_ORIGINS", mode="before")
