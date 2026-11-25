@@ -1,14 +1,13 @@
 from datetime import datetime, date
 from typing import Optional, List
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 class RoleResponse(BaseModel):
     id: int
     name: str
     description: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -39,8 +38,7 @@ class InstructorProfileResponse(BaseModel):
     qualification: Optional[str] = None
     biography: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class StudentProfileResponse(BaseModel):
     id: int
@@ -49,8 +47,7 @@ class StudentProfileResponse(BaseModel):
     emergency_contact: Optional[str] = None
     joining_date: Optional[date] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserResponse(UserBase):
     id: int
@@ -60,5 +57,4 @@ class UserResponse(UserBase):
     instructor_profile: Optional[InstructorProfileResponse] = None
     student_profile: Optional[StudentProfileResponse] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

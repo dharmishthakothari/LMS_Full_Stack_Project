@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional, List
 from decimal import Decimal
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class OptionCreate(BaseModel):
     option_text: str
@@ -11,16 +11,14 @@ class OptionStudentResponse(BaseModel):
     id: int
     option_text: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class OptionInstructorResponse(BaseModel):
     id: int
     option_text: str
     is_correct: bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class QuestionCreate(BaseModel):
     question_text: str
@@ -35,8 +33,7 @@ class QuestionStudentResponse(BaseModel):
     sequence_order: int
     options: List[OptionStudentResponse]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class QuestionInstructorResponse(BaseModel):
     id: int
@@ -45,8 +42,7 @@ class QuestionInstructorResponse(BaseModel):
     sequence_order: int
     options: List[OptionInstructorResponse]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class QuizBase(BaseModel):
     batch_id: int
@@ -72,8 +68,7 @@ class QuizResponse(QuizBase):
     highest_score: Optional[Decimal] = None
     is_passed: bool = False
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class SubmitAnswerItem(BaseModel):
     question_id: int
@@ -95,5 +90,4 @@ class AttemptResultResponse(BaseModel):
     is_passed: bool
     attempt_number: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

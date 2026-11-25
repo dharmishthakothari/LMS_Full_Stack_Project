@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class StudyMaterialResponse(BaseModel):
     id: int
@@ -11,8 +11,7 @@ class StudyMaterialResponse(BaseModel):
     file_size_bytes: int
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class LectureBase(BaseModel):
     module_id: int
@@ -39,5 +38,4 @@ class LectureResponse(LectureBase):
     is_completed: bool = False
     materials: List[StudyMaterialResponse] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

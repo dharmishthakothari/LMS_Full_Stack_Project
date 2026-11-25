@@ -1,7 +1,7 @@
 from datetime import datetime, date
 from typing import Optional, List
 from decimal import Decimal
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 # Attendance
 class AttendanceRecordItem(BaseModel):
@@ -23,8 +23,7 @@ class AttendanceResponse(BaseModel):
     status: str
     notes: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class StudentAttendanceSummary(BaseModel):
     total_sessions: int
@@ -57,8 +56,7 @@ class PaymentResponse(BaseModel):
     receipt_path: Optional[str] = None
     remarks: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Certificates
 class CertificateResponse(BaseModel):
@@ -73,8 +71,7 @@ class CertificateResponse(BaseModel):
     pdf_path: str
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Progress
 class ProgressResponse(BaseModel):
@@ -105,8 +102,7 @@ class NotificationResponse(BaseModel):
     link: Optional[str] = None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class AnnouncementCreate(BaseModel):
     title: str
@@ -123,5 +119,4 @@ class AnnouncementResponse(BaseModel):
     batch_name: Optional[str] = None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

@@ -1,6 +1,6 @@
 from datetime import datetime, date
 from typing import Optional, List
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class BatchBase(BaseModel):
     name: str
@@ -36,8 +36,7 @@ class BatchEnrollmentResponse(BaseModel):
     enrolled_at: datetime
     status: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class BatchResponse(BatchBase):
     id: int
@@ -46,8 +45,7 @@ class BatchResponse(BatchBase):
     enrolled_count: int = 0
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class EnrollStudentRequest(BaseModel):
     student_id: int

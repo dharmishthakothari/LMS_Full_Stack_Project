@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { GraduationCap, Lock, Mail, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { GraduationCap, Lock, Mail, ArrowRight, ShieldCheck, AlertCircle, Award } from 'lucide-react';
 
 export const Login = () => {
   const [email, setEmail] = useState('admin@lms.com');
@@ -110,9 +110,17 @@ export const Login = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Password
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Password
+                </label>
+                <Link
+                  to="/forgot-password"
+                  className="text-xs font-semibold text-indigo-600 hover:text-indigo-700"
+                >
+                  Forgot password?
+                </Link>
+              </div>
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
                 <input
@@ -136,8 +144,15 @@ export const Login = () => {
             </button>
           </form>
 
-          <div className="mt-6 text-center text-xs text-slate-400">
-            Enterprise LMS • Version 1.1 Production Release
+          <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col items-center gap-2 text-xs text-slate-400">
+            <Link
+              to="/verify-certificate"
+              className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-700 font-semibold"
+            >
+              <Award className="w-3.5 h-3.5" />
+              Public Certificate Verification
+            </Link>
+            <span>Enterprise LMS • Version 1.1 Production Release</span>
           </div>
         </div>
       </div>

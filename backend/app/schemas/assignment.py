@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional, List
 from decimal import Decimal
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class AssignmentBase(BaseModel):
     batch_id: int
@@ -28,8 +28,7 @@ class FeedbackResponse(BaseModel):
     evaluated_at: datetime
     evaluator_name: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class SubmissionResponse(BaseModel):
     id: int
@@ -42,8 +41,7 @@ class SubmissionResponse(BaseModel):
     status: str
     feedback: Optional[FeedbackResponse] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class EvaluateSubmissionRequest(BaseModel):
     marks_obtained: Decimal
@@ -56,5 +54,4 @@ class AssignmentResponse(AssignmentBase):
     submissions_count: int = 0
     my_submission: Optional[SubmissionResponse] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

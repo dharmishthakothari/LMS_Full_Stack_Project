@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional, List
 from decimal import Decimal
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class LectureSimpleResponse(BaseModel):
     id: int
@@ -11,8 +11,7 @@ class LectureSimpleResponse(BaseModel):
     duration_minutes: int
     video_url: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ModuleBase(BaseModel):
     title: str
@@ -33,8 +32,7 @@ class ModuleResponse(ModuleBase):
     created_at: datetime
     lectures: List[LectureSimpleResponse] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class CourseBase(BaseModel):
     title: str
@@ -65,5 +63,4 @@ class CourseResponse(CourseBase):
     updated_at: datetime
     modules: List[ModuleResponse] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
